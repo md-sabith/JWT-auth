@@ -37,10 +37,11 @@ const getSingleUsers=async(req,res)=>{
 
 //create a Users db
 const createUsers=async(req,res)=>{
+    console.log("Incoming body:", req.body); 
     const {name,email,password,role}= req.body
-    const hashedPassword = bcrypt.hash(password,10)
+    const hashedPassword =await bcrypt.hash(password,10)
     try{
-        const Users = await User.create({name,email,hashedPassword,role:"customer"});
+        const Users = await User.create({name,email,password:hashedPassword,role:role ||"customer"});
         res.status(200).json(Users);
         console.log(Users);
     }catch(err){

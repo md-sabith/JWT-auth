@@ -12,8 +12,16 @@ function Signup() {
    
     const navigate = useNavigate();
 
-    const handleSubmit=()=>{
-       
+    const handleSubmit=(e)=>{
+       e.preventDefault()
+
+       try{
+        const response = fetch('')
+       }catch{
+
+       }finally{
+
+       }
     }
 
   return (
