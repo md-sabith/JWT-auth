@@ -15,10 +15,19 @@ function Signup() {
     const handleSubmit=async(e)=>{
       e.preventDefault()
       try{
-        axios.post('http://localhost:4000/users/signup',{name,email,password,role})
-        .then((data)=>{
-          console.log(data);
-        })
+
+        const res = await axios.post('http://localhost:4000/users/signup',{name, email: email.trim().toLowerCase(), password, role})
+        const {token,user} = res.data
+        if (token && user) {
+          localStorage.setItem("token", token);
+          localStorage.setItem("user", JSON.stringify(user));
+          navigate("/");
+        }
+        // axios.post('http://localhost:4000/users/signup',{name,email,password,role})
+        // .then((data)=>{
+        //   console.log(data);
+        //   navigate('/')
+        // })
         
       }catch(er){
         console.log(er);

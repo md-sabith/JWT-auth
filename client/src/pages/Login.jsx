@@ -21,17 +21,29 @@ function Login() {
     const [email,setEmail] = useState('')
     const [password,setPassword] = useState('')
     const navigate = useNavigate()
-    
-    const handleLogin=async(e)=>{
+
+    const handleLogin = async (e) => {
       e.preventDefault()
-      try{
-        axios.post('http://localhost:4000/users/login',{email,password})
-        .then((data)=>{
-          console.log(data)
+      setLoad(true)
+      setLoginerr(null)
+      try {
+        const res = await axios.post('http://localhost:4000/users/login', {
+          email: email.trim().toLowerCase(),
+          password
         })
-        navigate('/')
-      }catch(err){
-        console.log(err)
+        const { token, user } = res.data || {}
+        if (token && user) {
+          localStorage.setItem('token', token)
+          localStorage.setItem('user', JSON.stringify(user))
+          navigate('/')
+        } else {
+          setLoginerr('No token or user received from server')
+        }
+      } catch (err) {
+        const message = err?.response?.data?.error || 'Invalid email or password'
+        setLoginerr(message)
+      } finally {
+        setLoad(false)
       }
     }
 
@@ -85,7 +97,7 @@ function Login() {
               disabled={load}
               className="w-full rounded-lg bg-blue-600 py-3 text-center font-semibold text-white transition-transform duration-200 hover:bg-blue-700 active:scale-95 disabled:cursor-not-allowed disabled:bg-blue-400"
             >
-              Login
+              {load ? 'Logging in...' : 'Login'}
             </button>
           </div>
         </form>

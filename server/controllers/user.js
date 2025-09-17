@@ -27,19 +27,31 @@ const getSingleUsers=async(req,res)=>{
 
 //create a Users db
 const createUsers=async(req,res)=>{
-    console.log("Incoming body:", req.body); 
+    
     const {name,email,password,role}= req.body
-    const hashedPassword =await bcrypt.hash(password,10)
+
     try{
-        const Users = await User.create({name,email,password:hashedPassword,role:role ||"customer"});
-        res.status(200).json(Users);
-        console.log(Users);
+    const emailLower = (email || '').toLowerCase().trim();
+    const existingUser = await User.findOne({ email: emailLower });
+    if (existingUser) {
+      return res.status(400).json({ error: "Email already exists" });
+    }
+
+        const hashedPassword =await bcrypt.hash(password,10)
+   
+        const users = await User.create({name,email: emailLower,password:hashedPassword,role:role ||"customer"});
+        const token = generateKey(users)
+        res.status(201).json({
+            token,
+            user: { id: users._id, name: users.name, email: users.email, role: users.role }
+          });
+        console.log(users);
     }catch(err){
         res.status(400).json({error:err.message});
     }
 }
 
-    const authService=async(email,password)=>{
+const authService=async(email,password)=>{
         try{
             const exitinguser= await User.findOne({email})
 
@@ -63,8 +75,20 @@ const createUsers=async(req,res)=>{
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
-    const token = await authService(email, password);
-    res.status(200).json({ token });
+    const emailLower = (email || '').toLowerCase().trim();
+
+    const user = await User.findOne({ email: { $regex: `^${emailLower}$`, $options: 'i' } });
+    if (!user) return res.status(401).json({ error: "User not found" });
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) return res.status(401).json({ error: "Incorrect password" });
+
+    const token = generateKey(user);
+    res.status(200).json({
+      token,
+      user: { id: user._id, name: user.name, email: user.email, role: user.role }
+    });
+    
   } catch (err) {
     res.status(401).json({ error: err.message || 'Login failed' });
   }

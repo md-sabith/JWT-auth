@@ -12,7 +12,7 @@ app.use(express.json());
 
 app.use((req,res,next)=>{
     console.log(req.method,req.path);
-    next();
+    next(); 
 })
 
 // routes included signup,login,fetch data

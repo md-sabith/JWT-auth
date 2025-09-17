@@ -3,9 +3,20 @@ import { useNavigate } from 'react-router-dom';
 
 function Header() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const username=`username`
-    const userInitial = username ? username.charAt(0).toUpperCase() : '?';
+   
     const navigate = useNavigate()
+
+    const token = localStorage.getItem("token")
+    const user = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : null;
+
+    const username=user? user.name:"Guest"
+    const userInitial = username ? username.charAt(0).toUpperCase() : '?';
+  
+    const handleLogout = ()=>{
+      localStorage.removeItem('token')
+      localStorage.removeItem('user')
+      navigate('/login')
+    }
   return (
     <>
       <header className="bg-white shadow-md fixed top-0 left-0 w-full z-50">
@@ -41,17 +52,18 @@ function Header() {
 
             {/* Center: Desktop Navigation Links */}
             <nav className="hidden md:flex md:items-center md:space-x-8">
-              <a href="#" className="text-gray-600 hover:text-indigo-600 transition-colors duration-200" onClick={()=>{navigate('/')}}>Dashboard</a>
-              <a href="#" className="text-gray-600 hover:text-indigo-600 transition-colors duration-200"  onClick={()=>{navigate('/login')}}>Login</a>
-              <a href="#" className="text-gray-600 hover:text-indigo-600 transition-colors duration-200"  onClick={()=>{navigate('/signup')}}>Signup</a>
+              {token && <a href="#" className="text-gray-600 hover:text-indigo-600 transition-colors duration-200" onClick={()=>{navigate('/')}}>Dashboard</a>}
+              {!token && <a href="#" className="text-gray-600 hover:text-indigo-600 transition-colors duration-200"  onClick={()=>{navigate('/login')}}>Login</a>}
+              {!token && <a href="#" className="text-gray-600 hover:text-indigo-600 transition-colors duration-200"  onClick={()=>{navigate('/signup')}}>Signup</a>}
             </nav>
 
             {/* Right side: User Info */}
             <div className="flex items-center space-x-3">
-              <h5 className="text-gray-700 font-medium  sm:block">{username}</h5>
+              <h5 className="text-gray-700 font-medium  sm:block">{token?username:"Not logged"}</h5>
               <div className="w-10 h-10 rounded-full bg-indigo-500 flex items-center justify-center text-white font-bold text-xl">
                 {userInitial}
               </div>
+              {token && <button onClick={handleLogout}>Logout</button>}
             </div>
             
           </div>
