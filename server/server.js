@@ -15,14 +15,14 @@ app.use((req,res,next)=>{
     next();
 })
 
-// routes
+// routes included signup,login,fetch data
 app.use('/users',usersRoutes)
 
 
 mongoose.connect(MongoURL)
 .then(()=>{
         app.listen(Port, () => {
-        console.log('Server is running on port ' + Port +'connected to DB');
+        console.log('Server is running on port ' + Port + 'connected to DB');
 });
 })
 .catch((err)=>console.log(err));

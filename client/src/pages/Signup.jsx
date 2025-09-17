@@ -1,28 +1,55 @@
 import React,{useState} from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 import {EmailIcon,UserIcon,LockIcon} from '../public/Icons'
-  
+import axios from 'axios'
 function Signup() {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-
+    const [role, setRole] = useState('customer');
     const [signupErr, setSignupErr] = useState('');
     const [load, setLoad] = useState(false);
    
     const navigate = useNavigate();
 
-    const handleSubmit=(e)=>{
-       e.preventDefault()
+    const handleSubmit=async(e)=>{
+      e.preventDefault()
+      try{
+        axios.post('http://localhost:4000/users/signup',{name,email,password,role})
+        .then((data)=>{
+          console.log(data);
+        })
+        
+      }catch(er){
+        console.log(er);
+        
+      }finally{
 
-       try{
-        const response = fetch('')
-       }catch{
+      }
 
-       }finally{
-
-       }
     }
+    // const handleSubmit=async(e)=>{
+    //    e.preventDefault()
+
+    //    try{
+    //     const response =await fetch('http://localhost:4000/users/signup',{
+    //       method:"POST",
+    //       headers:{
+    //         "Content-Type":"application/json"
+    //       },
+    //       body:JSON.stringify({name,password,email,role})
+    //     })
+    //     const result = response.json()
+    //     console.log(result)
+    //    }catch(err){
+    //     console.log(err);
+        
+    //    }finally{
+    //     setEmail('')
+    //     setName('')
+    //     setPassword('')
+    //    }
+    // }
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-100 font-sans">

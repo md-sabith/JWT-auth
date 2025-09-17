@@ -5,19 +5,21 @@ const {createUsers,
     getSingleUsers,
     deleteUsers,
     updateUsers,
-    filterByClass,
+    login,
     updateManyUsers} = require('../controllers/user')
 
 
 //get all Users
 router.get('/',getAllUsers)
 
-//filter by class
-router.get('/:classId',filterByClass)
+
+
 
 //get a single User
 router.get('/:id',getSingleUsers)
 
+// login (must be before dynamic :id routes)
+router.post('/login', login)
 //add a Users
 router.post('/signup',createUsers)
 

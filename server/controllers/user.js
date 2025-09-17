@@ -1,6 +1,7 @@
 const User = require('../models/user')
 const mongoose = require('mongoose')
 const bcrypt =require('bcrypt')
+const { generateKey } = require('../utils/jwtUtils')
 //get all Users
 const getAllUsers=async(req,res)=>{
     const Users= await User.find({}).sort({createdAt:-1})
@@ -8,17 +9,6 @@ const getAllUsers=async(req,res)=>{
     res.status(200).json(Users)
 }
 
-//filter by class
-const filterByClass= async(req,res)=>{
-    const {classId} = req.params
-     
-    const Users = await User.find({CLASS:classId})
-
-    if(!Users){
-        return res.status(404).json({error:'such document not fount'})
-    }
-    res.status(200).json(Users)
-}
 
 
 //get a single Users
@@ -48,6 +38,37 @@ const createUsers=async(req,res)=>{
         res.status(400).json({error:err.message});
     }
 }
+
+    const authService=async(email,password)=>{
+        try{
+            const exitinguser= await User.findOne({email})
+
+            if(!exitinguser){
+                throw new  Error ('User not found')
+            }
+            const isPasswordVaild = await bcrypt.compare(password,exitinguser.password)
+
+            if(!isPasswordVaild){
+                throw new  Error ('Incorrect Password')
+            }
+            const token =generateKey(exitinguser)
+            return token
+
+        }catch(err){
+            throw new  Error (err)
+        }
+    }
+
+// add handler that uses loginUser and sends a response
+const login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const token = await authService(email, password);
+    res.status(200).json({ token });
+  } catch (err) {
+    res.status(401).json({ error: err.message || 'Login failed' });
+  }
+};
 
 //delete a Users
 const deleteUsers =async(req,res)=>{
@@ -118,6 +139,6 @@ module.exports = {
     getSingleUsers,
     deleteUsers,
     updateUsers,
-    filterByClass,
-    updateManyUsers
+    updateManyUsers,
+    login
 }

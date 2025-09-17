@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom';
+import { EmailIcon } from '../public/Icons';
 
 const PhoneIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400">
@@ -17,6 +18,10 @@ const PhoneIcon = () => (
 function Login() {
     const [loginErr,setLoginerr] = useState(null)
     const [load,setLoad]= useState(false)
+
+    const handleLogin=async(e)=>{
+
+    }
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-100 font-sans">
        
@@ -27,7 +32,7 @@ function Login() {
           <p className="mt-2 text-gray-500">Login to access your account</p>
         </div>
 
-        <form  className="mt-8 space-y-5">
+        <form  className="mt-8 space-y-5" onSubmit={handleLogin}>
           {loginErr && (
             <div className="rounded-lg border border-red-300 bg-red-50 p-3 text-center text-sm font-medium text-red-700">
               {loginErr}
@@ -35,11 +40,11 @@ function Login() {
           )}
 
           <div className="relative">
-            <PhoneIcon />
+            <EmailIcon />
             <input
-              type="tel"
-              
-              placeholder="Phone Number"
+              type="email"
+             
+              placeholder="Email"
               className="w-full rounded-lg border border-gray-300 bg-gray-50 py-3 pl-10 pr-4 text-gray-800 placeholder-gray-400 transition-colors duration-200 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
               required
             />
