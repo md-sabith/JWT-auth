@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { EmailIcon } from '../public/Icons';
-
+const axios = require('axios')
 const PhoneIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400">
       <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
@@ -18,10 +18,24 @@ const PhoneIcon = () => (
 function Login() {
     const [loginErr,setLoginerr] = useState(null)
     const [load,setLoad]= useState(false)
-
+    const [email,setEmail] = useState('')
+    const [password,setPassword] = useState('')
+    const navigate = useNavigate()
+    
     const handleLogin=async(e)=>{
-
+      e.preventDefault()
+      try{
+        axios.post('http://localhost:4000/users/login',{email,password})
+        .then((data)=>{
+          console.log(data)
+        })
+        navigate('/')
+      }catch(err){
+        console.log(err)
+      }
     }
+
+    
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-100 font-sans">
        
@@ -43,7 +57,8 @@ function Login() {
             <EmailIcon />
             <input
               type="email"
-             
+              value={email}
+              onChange={(e)=>setEmail(e.target.value)}
               placeholder="Email"
               className="w-full rounded-lg border border-gray-300 bg-gray-50 py-3 pl-10 pr-4 text-gray-800 placeholder-gray-400 transition-colors duration-200 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
               required
@@ -54,7 +69,8 @@ function Login() {
             <LockIcon />
             <input
               type="password"
-              
+              value={password}
+              onChange={(e)=>setPassword(e.target.value)}
               placeholder="Password"
               className="w-full rounded-lg border border-gray-300 bg-gray-50 py-3 pl-10 pr-4 text-gray-800 placeholder-gray-400 transition-colors duration-200 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
               required
