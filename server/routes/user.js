@@ -15,13 +15,12 @@ router.get('/',getAllUsers)
 
 
 
+// login and signup first
+router.post('/login', login)
+router.post('/signup',createUsers)
+
 //get a single User
 router.get('/:id',getSingleUsers)
-
-// login (must be before dynamic :id routes)
-router.post('/login', login)
-//add a Users
-router.post('/signup',createUsers)
 
 //delete Users
 router.delete('/:id',deleteUsers)

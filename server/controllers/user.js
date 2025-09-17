@@ -77,19 +77,30 @@ const login = async (req, res) => {
     const { email, password } = req.body;
     const emailLower = (email || '').toLowerCase().trim();
 
+    if (!emailLower || !password) {
+      return res.status(400).json({ error: 'Email and password are required' })
+    }
+
+    
     const user = await User.findOne({ email: { $regex: `^${emailLower}$`, $options: 'i' } });
-    if (!user) return res.status(401).json({ error: "User not found" });
+    if (!user) {
+      console.log('[LOGIN] user not found');
+      return res.status(401).json({ error: "User not found" });
+    }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
+    
     if (!isPasswordValid) return res.status(401).json({ error: "Incorrect password" });
 
     const token = generateKey(user);
+   
     res.status(200).json({
       token,
       user: { id: user._id, name: user.name, email: user.email, role: user.role }
     });
     
   } catch (err) {
+    
     res.status(401).json({ error: err.message || 'Login failed' });
   }
 };
