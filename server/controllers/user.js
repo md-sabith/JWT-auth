@@ -138,42 +138,19 @@ const updateUsers = async(req,res)=>{
     res.status(200).json(Users)
 }
 
-// update many Users attendance
-const updateManyUsers = async (req, res) => {
-    try {
-      const { updates } = req.body; 
-      // updates should be an array of { ADNO, Status, Date, Time }
-  
-      const bulkOps = updates.map((u) => ({
-        updateOne: {
-          filter: { ADNO: u.ADNO },
-          update: {
-            $set: {
-              Status: u.Status,
-              Time: u.Time,
-              Date:u.Date
-              
-            }
-          }
-        }
-      }));
-  
-      await User.bulkWrite(bulkOps);
-  
-      res.status(200).json({ message: "Users updated successfully" });
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ error: err.message });
-    }
-  };
-  
+
 
 module.exports = {
     createUsers,
     getAllUsers,
     getSingleUsers,
     deleteUsers,
-    updateUsers,
-    updateManyUsers,
-    login
+    updateUsers, 
+    
+    login,
+    me: (req, res) => {
+        // requires authToken middleware to set req.user
+        if (!req.user) return res.status(401).json({ error: 'Unauthorized' })
+        return res.status(200).json({ user: req.user })
+    }
 }
