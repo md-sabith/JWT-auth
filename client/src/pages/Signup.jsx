@@ -16,14 +16,14 @@ function Signup() {
       e.preventDefault()
       try{
 
-        const res = await axios.post('http://localhost:4000/users/signup',{name, email: email.trim().toLowerCase(), password, role})
+        const res = await axios.post('https://jwt-auth-client-6r20.onrender.com/users/signup',{name, email: email.trim().toLowerCase(), password, role})
         const {token,user} = res.data
         if (token && user) {
           localStorage.setItem("token", token);
           localStorage.setItem("user", JSON.stringify(user));
           navigate("/");
         }
-        // axios.post('http://localhost:4000/users/signup',{name,email,password,role})
+        // axios.post('https://jwt-auth-client-6r20.onrender.com/users/signup',{name,email,password,role})
         // .then((data)=>{
         //   console.log(data);
         //   navigate('/')
@@ -41,7 +41,7 @@ function Signup() {
     //    e.preventDefault()
 
     //    try{
-    //     const response =await fetch('http://localhost:4000/users/signup',{
+    //     const response =await fetch('https://jwt-auth-client-6r20.onrender.com/users/signup',{
     //       method:"POST",
     //       headers:{
     //         "Content-Type":"application/json"

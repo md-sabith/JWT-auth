@@ -22,7 +22,7 @@ function Login() {
       setLoad(true)
       setLoginerr(null)
       try {
-        const res = await axios.post('http://localhost:4000/users/login', {
+        const res = await axios.post('https://jwt-auth-client-6r20.onrender.com/users/login', {
           email: email.trim().toLowerCase(),
           password
         })

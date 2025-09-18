@@ -26,7 +26,7 @@ function Dashback() {
         }
 
         // Only fetch users if user is admin
-        const res = await axios.get("http://localhost:4000/users", {
+        const res = await axios.get("https://jwt-auth-client-6r20.onrender.com/users", {
           headers: {
             'Authorization': `Bearer ${token}`
           }
