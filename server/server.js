@@ -25,6 +25,6 @@ mongoose.connect(MongoURL)
         console.log('Server is running on port ' + Port + 'connected to DB');
 });
 })
-.catch((err)=>console.log(err));
+.catch((err)=>console.log(err));    
 
 

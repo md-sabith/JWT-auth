@@ -14,26 +14,26 @@ function Signup() {
 
     const handleSubmit=async(e)=>{
       e.preventDefault()
+      setLoad(true)
+      setSignupErr('')
+      
       try{
-
-        const res = await axios.post('https://jwt-auth-client-6r20.onrender.com/users/signup',{name, email: email.trim().toLowerCase(), password, role})
+        const res = await axios.post('https://jwt-auth-backend-iwd6.onrender.com/users/signup',{name, email: email.trim().toLowerCase(), password, role})
         const {token,user} = res.data
         if (token && user) {
           localStorage.setItem("token", token);
           localStorage.setItem("user", JSON.stringify(user));
           navigate("/");
+        } else {
+          setSignupErr('No token or user received from server')
         }
-        // axios.post('https://jwt-auth-client-6r20.onrender.com/users/signup',{name,email,password,role})
-        // .then((data)=>{
-        //   console.log(data);
-        //   navigate('/')
-        // })
         
-      }catch(er){
-        console.log(er);
-        
+      }catch(err){
+        console.log(err);
+        const message = err?.response?.data?.error || 'Signup failed. Please try again.'
+        setSignupErr(message)
       }finally{
-
+        setLoad(false)
       }
 
     }
@@ -41,7 +41,7 @@ function Signup() {
     //    e.preventDefault()
 
     //    try{
-    //     const response =await fetch('https://jwt-auth-client-6r20.onrender.com/users/signup',{
+    //     const response =await fetch('https://jwt-auth-backend-iwd6.onrender.com/users/signup',{
     //       method:"POST",
     //       headers:{
     //         "Content-Type":"application/json"
@@ -122,7 +122,7 @@ function Signup() {
             disabled={load}
             className="w-full rounded-lg bg-blue-600 py-3 text-center font-semibold text-white transition-transform duration-200 hover:bg-blue-700 active:scale-95 disabled:cursor-not-allowed disabled:bg-blue-400"
           >
-            Sign Up
+            {load ? 'Signing up...' : 'Sign Up'}
           </button>
         </div>
       </form>
